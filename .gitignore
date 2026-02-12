@@ -1,0 +1,32 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+.env
+.venv
+env/
+
+# Build / release
+build/
+dist/
+release/
+*.manifest
+
+# Downloads (temp files; user downloads go to browser)
+downloads/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+*.log

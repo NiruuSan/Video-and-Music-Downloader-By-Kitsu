@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube & SoundCloud Downloader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #f5f5f5;
+      --text-muted: #888;
+      --accent: #ff0040;
+      --accent-hover: #ff3366;
+      --success: #22c55e;
+      --error: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin: 0 0 2rem 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    input[type="url"] {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font: inherit;
+      font-size: 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    input[type="url"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    input[type="url"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 0, 64, 0.2);
+    }
+
+    select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font: inherit;
+      font-size: 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 0, 64, 0.2);
+    }
+
+    select option {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .format-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .format-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .format-option input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .format-option label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1rem;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 0;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .format-option input:checked + label {
+      border-color: var(--accent);
+      background: rgba(255, 0, 64, 0.08);
+      color: var(--accent);
+    }
+
+    .format-option label:hover {
+      border-color: var(--text-muted);
+    }
+
+    .format-option input:checked + label:hover {
+      border-color: var(--accent-hover);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.95rem 1.25rem;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s;
+    }
+
+    .btn:active {
+      transform: scale(0.99);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .message.visible {
+      display: block;
+    }
+
+    .message.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .message.success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+    }
+
+    .source-tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .source-tab {
+      flex: 1;
+      position: relative;
+    }
+    .source-tab input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .source-tab label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.65rem 0.85rem;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 0;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .source-tab input:checked + label {
+      border-color: var(--accent);
+      background: rgba(255, 0, 64, 0.08);
+      color: var(--accent);
+    }
+    .source-tab label:hover { border-color: var(--text-muted); }
+    .source-tab input:checked + label:hover { border-color: var(--accent-hover); }
+
+    .row-inline {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .row-inline input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      cursor: pointer;
+    }
+    .row-inline label {
+      margin: 0;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .youtube-only { display: block; }
+    .soundcloud-only { display: none; }
+    body.source-soundcloud .youtube-only { display: none; }
+    body.source-soundcloud .soundcloud-only { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>YouTube & SoundCloud Downloader</h1>
+    <p class="subtitle">Paste a YouTube or SoundCloud link. Single track or full playlist.</p>
+
+    <div class="card">
+      <label>Source</label>
+      <div class="source-tabs">
+        <div class="source-tab">
+          <input type="radio" name="source" id="src-youtube" value="youtube" checked>
+          <label for="src-youtube">YouTube</label>
+        </div>
+        <div class="source-tab">
+          <input type="radio" name="source" id="src-soundcloud" value="soundcloud">
+          <label for="src-soundcloud">SoundCloud</label>
+        </div>
+      </div>
+
+      <label for="url">URL</label>
+      <input
+        type="url"
+        id="url"
+        placeholder="https://www.youtube.com/watch?v=... or https://soundcloud.com/..."
+        autocomplete="off"
+      />
+
+      <div class="soundcloud-only row-inline">
+        <input type="checkbox" id="asPlaylist" name="asPlaylist">
+        <label for="asPlaylist">Download as playlist (all tracks + cover + info in a zip)</label>
+      </div>
+
+      <label class="youtube-only">Format</label>
+      <div class="format-row youtube-only">
+        <div class="format-option">
+          <input type="radio" name="format" id="fmt-mp4" value="mp4" checked>
+          <label for="fmt-mp4">MP4 (video)</label>
+        </div>
+        <div class="format-option">
+          <input type="radio" name="format" id="fmt-mp3" value="mp3">
+          <label for="fmt-mp3">MP3</label>
+        </div>
+        <div class="format-option">
+          <input type="radio" name="format" id="fmt-wav" value="wav">
+          <label for="fmt-wav">WAV</label>
+        </div>
+      </div>
+
+      <label class="soundcloud-only">Audio format</label>
+      <div class="format-row soundcloud-only">
+        <div class="format-option">
+          <input type="radio" name="audioFormat" id="afmt-mp3" value="mp3" checked>
+          <label for="afmt-mp3">MP3</label>
+        </div>
+        <div class="format-option">
+          <input type="radio" name="audioFormat" id="afmt-wav" value="wav">
+          <label for="afmt-wav">WAV</label>
+        </div>
+      </div>
+
+      <label for="quality">Quality</label>
+      <select id="quality">
+        <option value="best">Best</option>
+        <option value="2160">4K (2160p)</option>
+        <option value="1440">1440p</option>
+        <option value="1080">1080p</option>
+        <option value="720">720p</option>
+        <option value="480">480p</option>
+        <option value="360">360p</option>
+      </select>
+
+      <button type="button" class="btn btn-primary" id="downloadBtn">Download</button>
+
+      <div id="message" class="message" role="alert"></div>
+    </div>
+
+    <p class="hint">Uses yt-dlp. YouTube MP4 and SoundCloud need FFmpeg.</p>
+  </div>
+
+  <script>
+    const urlInput = document.getElementById('url');
+    const sourceInputs = document.querySelectorAll('input[name="source"]');
+    const formatInputs = document.querySelectorAll('input[name="format"]');
+    const qualitySelect = document.getElementById('quality');
+    const asPlaylistCheck = document.getElementById('asPlaylist');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const messageEl = document.getElementById('message');
+
+    const mp4Qualities = [
+      { value: 'best', label: 'Best' },
+      { value: '2160', label: '4K (2160p)' },
+      { value: '1440', label: '1440p' },
+      { value: '1080', label: '1080p' },
+      { value: '720', label: '720p' },
+      { value: '480', label: '480p' },
+      { value: '360', label: '360p' }
+    ];
+    const mp3Qualities = [
+      { value: 'best', label: 'Best' },
+      { value: '320', label: '320 kbps' },
+      { value: '192', label: '192 kbps' },
+      { value: '128', label: '128 kbps' }
+    ];
+
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.className = 'message visible ' + (type || '');
+    }
+    function hideMessage() {
+      messageEl.className = 'message';
+    }
+    function getSource() {
+      const c = document.querySelector('input[name="source"]:checked');
+      return c ? c.value : 'youtube';
+    }
+    function getFormat() {
+      const source = getSource();
+      if (source === 'soundcloud') {
+        const c = document.querySelector('input[name="audioFormat"]:checked');
+        return c ? c.value : 'mp3';
+      }
+      const c = document.querySelector('input[name="format"]:checked');
+      return c ? c.value : 'mp4';
+    }
+    function updateUI() {
+      const source = getSource();
+      document.body.classList.toggle('source-soundcloud', source === 'soundcloud');
+      if (source === 'soundcloud') {
+        const cur = qualitySelect.value;
+        qualitySelect.innerHTML = mp3Qualities.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+        qualitySelect.value = mp3Qualities.some(o => o.value === cur) ? cur : 'best';
+      } else {
+        const format = getFormat();
+        const opts = format === 'mp4' ? mp4Qualities : mp3Qualities;
+        const cur = qualitySelect.value;
+        qualitySelect.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+        qualitySelect.value = opts.some(o => o.value === cur) ? cur : 'best';
+      }
+    }
+    function updateQualityForFormat() {
+      if (getSource() !== 'youtube') return;
+      const format = getFormat();
+      const opts = format === 'mp4' ? mp4Qualities : mp3Qualities;
+      const cur = qualitySelect.value;
+      qualitySelect.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+      qualitySelect.value = opts.some(o => o.value === cur) ? cur : 'best';
+    }
+
+    sourceInputs.forEach(r => r.addEventListener('change', updateUI));
+    formatInputs.forEach(r => r.addEventListener('change', updateQualityForFormat));
+    document.querySelectorAll('input[name="audioFormat"]').forEach(r => r.addEventListener('change', updateUI));
+
+    urlInput.addEventListener('input', () => {
+      hideMessage();
+      const url = urlInput.value.trim();
+      if (!url) return;
+      fetch('/api/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.valid && data.source === 'soundcloud' && data.playlist) {
+            asPlaylistCheck.checked = true;
+          }
+        })
+        .catch(() => {});
+    });
+    urlInput.addEventListener('paste', () => setTimeout(hideMessage, 0));
+
+    downloadBtn.addEventListener('click', async () => {
+      const url = urlInput.value.trim();
+      const source = getSource();
+      if (!url) {
+        showMessage('Please paste a URL.', 'error');
+        return;
+      }
+
+      const format = getFormat();
+      const quality = qualitySelect.value;
+      const playlist = source === 'soundcloud' && asPlaylistCheck.checked;
+      downloadBtn.disabled = true;
+      hideMessage();
+      downloadBtn.innerHTML = '<span class="spinner"></span> Downloading…';
+
+      try {
+        const res = await fetch('/api/download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, source, format, quality, playlist }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          showMessage(data.error || 'Download failed.', 'error');
+          return;
+        }
+
+        const blob = await res.blob();
+        const disposition = res.headers.get('Content-Disposition');
+        let filename = 'download.' + (res.headers.get('Content-Type')?.includes('zip') ? 'zip' : source === 'soundcloud' ? 'mp3' : format);
+        if (disposition) {
+          const match = disposition.match(/filename\*?=(?:UTF-8'')?"?([^";\n]+)"?/i) || disposition.match(/filename="?([^";\n]+)"?/i);
+          if (match) filename = match[1].trim();
+        }
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showMessage('Download started.', 'success');
+      } catch (e) {
+        showMessage('Network error. Is the server running?', 'error');
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = 'Download';
+      }
+    });
+  </script>
+</body>
+</html>
