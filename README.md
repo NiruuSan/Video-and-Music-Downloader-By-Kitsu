@@ -4,33 +4,10 @@ Download **YouTube** videos as MP4 or MP3 (including 4K/1440p), and **SoundCloud
 
 ---
 
-## Publish this project to GitHub
-
-1. **Create the repo on GitHub**  
-   [github.com/new](https://github.com/new) → name it (e.g. `youtube-soundcloud-downloader`) → Create repository (don’t add README or .gitignore).
-
-2. **Push from your machine** (in the project folder):
-
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: YouTube & SoundCloud downloader"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-   git push -u origin main
-   ```
-   Replace `YOUR_USERNAME` and `YOUR_REPO` with your GitHub username and repo name.
-
-3. **Update the Releases link** in this README: change `YOUR_USERNAME/YOUR_REPO` in the Releases URL to your repo (e.g. `jane/youtube-soundcloud-downloader`).
-
-4. **To ship builds:** Create a new release (tag e.g. `v1.0.0`, Publish). If the repo has `.github/workflows/release.yml`, GitHub Actions will build Windows and macOS zips and attach them to the release.
-
----
-
-## For users (run from GitHub)
+## For users
 
 **Windows**
-1. Download the latest **Windows** zip from [Releases](https://github.com/YOUR_USERNAME/YOUR_REPO/releases) (e.g. `YouTube-Downloader-win64.zip`).
+1. Download the latest **Windows** zip from [Releases](https://github.com/NiruuSan/Video-and-Music-Downloader-By-Kitsu/releases).
 2. Unzip anywhere, then double-click **YouTube Downloader.exe**. Your browser will open.
 
 **macOS**
