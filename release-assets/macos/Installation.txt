@@ -1,0 +1,33 @@
+YouTube & SoundCloud Downloader — macOS
+
+STEP 1: Install FFmpeg (required for MP4 and audio conversion)
+--------------------------------------------------------------
+• Double-click "install_ffmpeg.command" and follow the prompts.
+  It will install FFmpeg using Homebrew.
+
+• If you don't have Homebrew, install it first from https://brew.sh
+  Then run install_ffmpeg.command again.
+
+• Or open Terminal and run manually:
+  brew install ffmpeg
+
+
+STEP 2: Run the app
+-------------------
+• Double-click "Run.command" to start the downloader.
+  Your browser will open automatically.
+
+• Or open Terminal and run:
+  cd "/path/to/YouTube Downloader"
+  ./Run.command
+  (Replace /path/to/ with the actual folder location.)
+
+
+STEP 3: Use the app
+-------------------
+• Paste a YouTube or SoundCloud URL in the browser.
+• Choose format (MP4, MP3, or WAV) and quality.
+• Click Download. Files go to your browser's download folder.
+
+
+To stop the app: close the Terminal window that opened when you ran it.

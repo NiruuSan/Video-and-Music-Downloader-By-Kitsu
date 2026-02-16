@@ -11,12 +11,12 @@ Download **YouTube** videos as MP4 or MP3 (including 4K/1440p), and **SoundCloud
 2. Unzip anywhere, then double-click **YouTube Downloader.exe**. Your browser will open.
 
 **macOS**
-1. Download the **macOS** zip (e.g. `YouTube-Downloader-macos-arm64.zip` for Apple Silicon, or `macos-x64.zip` for Intel).
-2. Unzip, open **Terminal**, then run: `cd /path/to/YouTube\ Downloader` and `./YouTube\ Downloader`. Your browser will open.
+1. Download the **macOS** zip from [Releases](https://github.com/YOUR_USERNAME/YOUR_REPO/releases).
+2. Unzip and open **Installation.txt** for full instructions. In short: double-click **install_ffmpeg.command** (installs FFmpeg via Homebrew), then double-click **Run.command** to start the app. Your browser will open.
 
 **Then (both):** Choose YouTube or SoundCloud, paste a URL, set options, click Download. For SoundCloud playlists, check “Download as playlist” to get a zip with all tracks, cover art, and playlist info. Close the console/Terminal window to stop the app. Downloads go to your browser’s download folder.
 
-**Included:** FFmpeg is bundled in the zip, so you don’t need to install it.
+**Note:** Windows zip includes FFmpeg. macOS zip includes **Installation.txt** and **install_ffmpeg.command** (double-click to install FFmpeg) and **Run.command** (double-click to run the app).
 
 ---
 
