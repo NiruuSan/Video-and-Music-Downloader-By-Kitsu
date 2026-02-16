@@ -93,12 +93,18 @@ jobs:
             URL="https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-macos64-gpl.zip"
             DIR="ffmpeg-master-latest-macos64-gpl"
           fi
-          curl -sL -o release/ffmpeg.zip "$URL"
-          unzip -q -o release/ffmpeg.zip -d release
           mkdir -p "release/YouTube Downloader/ffmpeg"
-          cp "release/$DIR/bin/ffmpeg" "release/YouTube Downloader/ffmpeg/"
-          cp "release/$DIR/bin/ffprobe" "release/YouTube Downloader/ffmpeg/"
-          chmod +x "release/YouTube Downloader/ffmpeg/ffmpeg" "release/YouTube Downloader/ffmpeg/ffprobe"
+          if curl -fLsS -H "Accept: application/octet-stream" -o release/ffmpeg.zip "$URL" && [ "$(head -c 2 release/ffmpeg.zip)" = "PK" ]; then
+            unzip -q -o release/ffmpeg.zip -d release
+            if [ -d "release/$DIR/bin" ]; then
+              cp "release/$DIR/bin/ffmpeg" "release/YouTube Downloader/ffmpeg/"
+              cp "release/$DIR/bin/ffprobe" "release/YouTube Downloader/ffmpeg/"
+              chmod +x "release/YouTube Downloader/ffmpeg/ffmpeg" "release/YouTube Downloader/ffmpeg/ffprobe"
+            fi
+          fi
+          if [ ! -x "release/YouTube Downloader/ffmpeg/ffmpeg" ]; then
+            echo "FFmpeg could not be bundled. Users should run: brew install ffmpeg" > "release/YouTube Downloader/INSTALL_FFMPEG.txt"
+          fi
 
       - name: Zip release
         run: |
